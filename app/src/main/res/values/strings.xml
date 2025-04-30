@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">Cure Track</string>
+    <string name="title_home">Home</string>
+    <string name="title_Dashboard">Dashboard</string>
+    <string name="title_notification">Notification</string>
+
+    <string-array name="City">
+        <item> Bhopal</item>
+        <item> Mumbai</item>
+    </string-array>
+
+    <string-array name="HospitalName">
+        <item> Aiims Bhopal </item>
+        <item> Hamidia Hospital </item>
+        <item> Apollo Hospital </item>
+        <item> Bansal </item>
+    </string-array>
+</resources>
