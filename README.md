@@ -63,6 +63,38 @@ It also includes user profiles, location-based search, and navigation between co
 <img src="appointment.png" alt="Appointment Screen" width="250"/>
 </p>
 
+### 🛠️ Installation Steps for Android Studio
+Follow these steps to set up and run this Android project locally:
+
+**1. 📥 Install Android Studio**
+Download and install Android Studio from the official website:
+👉 https://developer.android.com/studio
+
+**2. 🚀 Clone the Project**
+bash
+Copy
+Edit
+git clone https://github.com/your-username/your-repo-name.git
+
+**3. 📂 Open the Project in Android Studio**
+Launch Android Studio.
+
+Click File > Open and select the cloned project folder.
+
+**4. 📦 Install Dependencies**
+Android Studio will automatically sync and install Gradle dependencies.
+
+If prompted, click "Sync Now".
+
+**5. 📱 Set Up an Emulator or Connect a Device**
+Go to Tools > Device Manager and create a virtual device (emulator),
+or connect a physical Android device with USB debugging enabled.
+
+**6. ▶️ Run the App**
+Click the green "Run" button or use Shift + F10 to build and run the app on the selected device.
+
+
+
 ### Example Cloudinary Config:
 ```java
 Map<String, String> config = new HashMap<>();
