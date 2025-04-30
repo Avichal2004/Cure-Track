@@ -74,7 +74,7 @@ Download and install Android Studio from the official website:
 bash
 Copy
 Edit
-git clone https://github.com/your-username/your-repo-name.git
+git clone https://github.com/Avichal2004/Cure-track.git
 
 **3. 📂 Open the Project in Android Studio**
 Launch Android Studio.
