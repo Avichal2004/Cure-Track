@@ -65,7 +65,7 @@ It also includes user profiles, location-based search, and navigation between co
 
 ### Demo Video 
 <video width="640" height="360" controls>
-        <source src="video.mp4" type="video/mp4">
+        <source src="video1.mp4" type="video/mp4">
         Your browser does not support the video tag.
 </video>
     
