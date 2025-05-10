@@ -13,7 +13,6 @@ import androidx.core.view.WindowInsetsCompat;
 
 public class Patientrecord extends AppCompatActivity {
 
-    Button btn2,btn3;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -24,26 +23,6 @@ public class Patientrecord extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-        btn2 = (Button)findViewById(R.id.btn2);
-        btn3 = (Button)findViewById(R.id.btn3);
-        btn2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
 
-                Intent Z = new Intent(Patientrecord.this,Patienthome.class);
-                startActivity(Z);
-                finish();
-            }
-        });
-
-        btn3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                Intent Z = new Intent(Patientrecord.this,Patientnotification.class);
-                startActivity(Z);
-                finish();
-            }
-        });
     }
     }

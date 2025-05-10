@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/nav_home"
+        android:icon="@drawable/baseline_home_24"
+        android:title="" />
+
+    <item
+        android:id="@+id/nav_record"
+        android:icon="@drawable/baseline_record"
+        android:title="" />
+
+    <item
+        android:id="@+id/nav_notification"
+        android:icon="@drawable/baseline_all_inbox_24"
+        android:title="" />
+
+
+</menu>

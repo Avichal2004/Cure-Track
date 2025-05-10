@@ -24,26 +24,6 @@ public class Patientnotification extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-        btn4 = (Button)findViewById(R.id.btn4);
-        btn5 = (Button)findViewById(R.id.btn5);
-        btn4.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
 
-                Intent Z = new Intent(Patientnotification.this,Patientrecord.class);
-                startActivity(Z);
-                finish();
-            }
-        });
-
-        btn5.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                Intent Z = new Intent(Patientnotification.this,Patienthome.class);
-                startActivity(Z);
-                finish();
-            }
-        });
     }
     }

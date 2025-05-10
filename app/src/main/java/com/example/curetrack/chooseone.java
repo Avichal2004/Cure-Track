@@ -12,7 +12,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-public class                                                                                                                                            chooseone extends AppCompatActivity {
+public class chooseone extends AppCompatActivity {
 
     Button aspatient,ashospital;
     String type;

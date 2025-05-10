@@ -6,8 +6,6 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -25,108 +23,85 @@ import com.google.firebase.auth.FirebaseAuth;
 
 public class hospitalloginemail extends AppCompatActivity {
 
-
-    TextInputLayout email,pass;
+    TextInputLayout email, pass;
     Button login;
     FirebaseAuth Fauth;
-    String emailid,pwd;
+    String emailid, pwd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_hospitalloginemail);
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
 
-        try{
+        email = findViewById(R.id.email2);
+        pass = findViewById(R.id.pwd2);
+        login = findViewById(R.id.button);
 
-            email = (TextInputLayout)findViewById(R.id.email2);
-            pass = (TextInputLayout)findViewById(R.id.pwd2);
-            login = (Button)findViewById(R.id.button);
+        Fauth = FirebaseAuth.getInstance();
 
-            Fauth = FirebaseAuth.getInstance();
+        login.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                emailid = email.getEditText().getText().toString().trim();
+                pwd = pass.getEditText().getText().toString().trim();
 
-            login.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+                if (isValid()) {
+                    final ProgressDialog mDialog = new ProgressDialog(hospitalloginemail.this);
+                    mDialog.setCanceledOnTouchOutside(false);
+                    mDialog.setCancelable(false);
+                    mDialog.setMessage("Signing in, please wait...");
+                    mDialog.show();
 
-                    emailid = email.getEditText().getText().toString().trim();
-                    pwd = pass.getEditText().getText().toString().trim();
-
-                    if(isValid()){
-
-                        final ProgressDialog mDialog = new ProgressDialog(hospitalloginemail.this);
-                        mDialog.setCanceledOnTouchOutside(false);
-                        mDialog.setCancelable(false);
-                        mDialog.setMessage("Sign In Please Wait.......");
-                        mDialog.show();
-
-                        Fauth.signInWithEmailAndPassword(emailid,pwd).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                            @Override
-                            public void onComplete(@NonNull Task<AuthResult> task) {
-
-                                if(task.isSuccessful()){
+                    Fauth.signInWithEmailAndPassword(emailid, pwd)
+                            .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                                @Override
+                                public void onComplete(@NonNull Task<AuthResult> task) {
                                     mDialog.dismiss();
-
-                                    if(Fauth.getCurrentUser().isEmailVerified()){
-                                        mDialog.dismiss();
-                                        Toast.makeText(hospitalloginemail.this, "Congratulation! You Have Successfully Login", Toast.LENGTH_SHORT).show();
-
-                                        Intent Z = new Intent(hospitalloginemail.this,Hospitalhome.class);
-                                        startActivity(Z);
-
-                                    }else{
-                                        ReusableCodeForAll.ShowAlert(hospitalloginemail.this,"Verification Failed","You Have Not Verified Your Email");
-
+                                    if (task.isSuccessful()) {
+                                        Toast.makeText(hospitalloginemail.this, "Login Successful", Toast.LENGTH_SHORT).show();
+                                        startActivity(new Intent(hospitalloginemail.this, Hospitalhome.class));
+                                        finish();
+                                    } else {
+                                        ReusableCodeForAll.ShowAlert(hospitalloginemail.this, "Login Failed", task.getException().getMessage());
                                     }
-                                }else{
-                                    mDialog.dismiss();
-                                    ReusableCodeForAll.ShowAlert(hospitalloginemail.this,"Error",task.getException().getMessage());
                                 }
-                            }
-                        });
-                    }
+                            });
                 }
-            });
-
-        }catch (Exception e){
-            Toast.makeText(this,e.getMessage(),Toast.LENGTH_LONG).show();
-        }
-
+            }
+        });
     }
-    String emailpattern  = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
 
-    public boolean isValid(){
+    String emailpattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
 
+    public boolean isValid() {
         email.setErrorEnabled(false);
-        email.setError("");
         pass.setErrorEnabled(false);
-        pass.setError("");
 
-        boolean isvalid=false,isvalidemail=false,isvalidpassword=false;
-        if(TextUtils.isEmpty(emailid)){
+        boolean isValid = true;
+
+        if (TextUtils.isEmpty(emailid)) {
             email.setErrorEnabled(true);
             email.setError("Email is required");
-        }else{
-            if(emailid.matches(emailpattern)){
-                isvalidemail=true;
-            }else{
-                email.setErrorEnabled(true);
-                email.setError("Invalid Email Address");
-            }
+            isValid = false;
+        } else if (!emailid.matches(emailpattern)) {
+            email.setErrorEnabled(true);
+            email.setError("Invalid Email Address");
+            isValid = false;
         }
-        if(TextUtils.isEmpty(pwd)){
 
+        if (TextUtils.isEmpty(pwd)) {
             pass.setErrorEnabled(true);
-            pass.setError("Password is Required");
-        }else{
-            isvalidpassword=true;
+            pass.setError("Password is required");
+            isValid = false;
         }
-        isvalid=(isvalidemail && isvalidpassword)?true:false;
-        return isvalid;
+
+        return isValid;
     }
 }

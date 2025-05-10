@@ -50,7 +50,8 @@ public class MainActivity extends AppCompatActivity {
         });
        new Handler().postDelayed(new Runnable() {
            @Override
-           public void run() {
+           public void run() {//Mianmenu class
+
                Intent intent=new Intent(MainActivity.this,Mianmenu.class);
                startActivity(intent);
                finish();

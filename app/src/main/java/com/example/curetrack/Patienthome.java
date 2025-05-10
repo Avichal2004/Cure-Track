@@ -2,65 +2,89 @@ package com.example.curetrack;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
-import android.widget.ImageButton;
-import android.widget.SearchView;
+import android.view.MenuItem;
+import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationBarView;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
 
 public class Patienthome extends AppCompatActivity {
 
-    ImageButton aiims,apollo,bansal;
-    Button btn,btn1;
+    private RecyclerView recyclerView;
+    private ArrayList<Hospital> hospitalList;
+    private HospitalAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_patienthome);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
-        aiims = (ImageButton)findViewById(R.id.aiims);
-        apollo = (ImageButton)findViewById(R.id.apollo);
-        bansal = (ImageButton)findViewById(R.id.bansal);
-        aiims.setOnClickListener(new View.OnClickListener() {
+
+        // Initialize RecyclerView
+        recyclerView = findViewById(R.id.recyclerView);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        hospitalList = new ArrayList<>();
+        adapter = new HospitalAdapter(this, hospitalList);
+        recyclerView.setAdapter(adapter);
+
+        // Load data from Firebase
+        loadHospitalsFromFirebase();
+
+        // Setup Bottom Navigation
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigation);
+        bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
-            public void onClick(View v) {
-             Intent Z = new Intent(Patienthome.this,aiimsnext.class);
-             startActivity(Z);
-             finish();
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                Intent intent = null;
+
+                if (item.getItemId() == R.id.nav_home) {
+                    return true; // Stay on current activity
+                } else if (item.getItemId() == R.id.nav_record) {
+                    intent = new Intent(Patienthome.this, RecordActivity.class);
+                } else if (item.getItemId() == R.id.nav_notification) {
+                    intent = new Intent(Patienthome.this, NotificationActivity.class);
+                }
+
+                if (intent != null) {
+                    startActivity(intent);
+                    overridePendingTransition(0, 0);
+                    return true;
+                }
+                return false;
             }
         });
-        btn = (Button)findViewById(R.id.btn);
-        btn1 = (Button)findViewById(R.id.btn1);
-        btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+    }
 
-                Intent Z = new Intent(Patienthome.this,Patientrecord.class);
-                startActivity(Z);
-                finish();
-            }
-        });
+    private void loadHospitalsFromFirebase() {
+        FirebaseDatabase.getInstance().getReference("Hospitals")
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        hospitalList.clear();
+                        for (DataSnapshot data : snapshot.getChildren()) {
+                            Hospital hospital = data.getValue(Hospital.class);
+                            if (hospital != null) {
+                                hospitalList.add(hospital);
+                            }
+                        }
+                        adapter.notifyDataSetChanged();
+                    }
 
-        btn1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        Toast.makeText(Patienthome.this, "Failed to load data", Toast.LENGTH_SHORT).show();
+                    }
+                });
 
-                Intent Z = new Intent(Patienthome.this,Patientnotification.class);
-                startActivity(Z);
-                finish();
-            }
-        });
-        SearchView searchView = findViewById(R.id.searchview);
-        searchView.setQueryHint("Search hospital");
     }
 }

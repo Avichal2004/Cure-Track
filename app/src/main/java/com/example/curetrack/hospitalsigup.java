@@ -3,17 +3,12 @@ package com.example.curetrack;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.Spinner;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -23,203 +18,123 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-
-import java.util.ArrayList;
 import java.util.HashMap;
-
-
 
 public class hospitalsigup extends AppCompatActivity {
 
-    TextInputLayout Fname,Email,Pass,cpass,mobileno;
-
-    Button signup, Emaill, Phone;
-
+    TextInputLayout Fname, Email, Pass, cpass, mobileno;
+    Button signup;
     FirebaseAuth FAuth;
     DatabaseReference databaseReference;
     FirebaseDatabase firebaseDatabase;
-    String fname,emailid,password,confpassword,mobile;
-    String role="Hospital";
+    String fname, emailid, password, confpassword, mobile;
+    String role = "Hospital";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_hospitalsignup);
 
-        Fname = (TextInputLayout)findViewById(R.id.HospitalName);
-        Email = (TextInputLayout)findViewById(R.id.email);
-        Pass = (TextInputLayout)findViewById(R.id.Pwd);
-        cpass = (TextInputLayout)findViewById(R.id.confirmpwd);
-        mobileno = (TextInputLayout)findViewById(R.id.Phoneno);
+        Fname = findViewById(R.id.HospitalName);
+        Email = findViewById(R.id.email);
+        Pass = findViewById(R.id.Pwd);
+        cpass = findViewById(R.id.confirmpwd);
+        mobileno = findViewById(R.id.Phoneno);
+        signup = findViewById(R.id.signupbtn);
 
-        signup = (Button)findViewById(R.id.signupbtn);
-
-
-
-
-
-        databaseReference = firebaseDatabase.getInstance().getReference("Hospital");
+        databaseReference = FirebaseDatabase.getInstance().getReference("Hospital");
         FAuth = FirebaseAuth.getInstance();
 
         signup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 fname = Fname.getEditText().getText().toString().trim();
                 emailid = Email.getEditText().getText().toString().trim();
                 mobile = mobileno.getEditText().getText().toString().trim();
                 password = Pass.getEditText().getText().toString().trim();
                 confpassword = cpass.getEditText().getText().toString().trim();
 
-                if (isValid()){
+                if (isValid()) {
                     final ProgressDialog mDialog = new ProgressDialog(hospitalsigup.this);
                     mDialog.setCancelable(false);
                     mDialog.setCanceledOnTouchOutside(false);
-                    mDialog.setMessage("Registration in progress please wait......");
+                    mDialog.setMessage("Registering...");
                     mDialog.show();
 
-                    FAuth.createUserWithEmailAndPassword(emailid,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
+                    FAuth.createUserWithEmailAndPassword(emailid, password)
+                            .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                                @Override
+                                public void onComplete(@NonNull Task<AuthResult> task) {
+                                    if (task.isSuccessful()) {
+                                        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-                            if (task.isSuccessful()){
-                                String useridd = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                                databaseReference = FirebaseDatabase.getInstance().getReference("User").child(useridd);
-                                final HashMap<String , String> hashMap = new HashMap<>();
-                                hashMap.put("Role",role);
-                                databaseReference.setValue(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<Void> task) {
+                                        FirebaseDatabase.getInstance().getReference("User")
+                                                .child(userId)
+                                                .child("Role")
+                                                .setValue(role);
 
-                                        HashMap<String , String> hashMap1 = new HashMap<>();
-                                        hashMap1.put("Mobile No",mobile);
-                                        hashMap1.put("First Name",fname);
-                                        hashMap1.put("EmailId",emailid);
-                                        hashMap1.put("Password",password);
-                                        hashMap1.put("Confirm Password",confpassword);
+                                        HashMap<String, String> hospitalData = new HashMap<>();
+                                        hospitalData.put("phone", mobile);
+                                        hospitalData.put("name", fname);
+                                        hospitalData.put("EmailId", emailid);
+                                        hospitalData.put("Password", password);
+                                        hospitalData.put("Confirm Password", confpassword);
 
-
-                                        firebaseDatabase.getInstance().getReference("Hospital")
-                                                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                                                .setValue(hashMap1).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        FirebaseDatabase.getInstance().getReference("Hospitals")
+                                                .child(userId)
+                                                .setValue(hospitalData)
+                                                .addOnCompleteListener(new OnCompleteListener<Void>() {
                                                     @Override
                                                     public void onComplete(@NonNull Task<Void> task) {
                                                         mDialog.dismiss();
-
-                                                        FAuth.getCurrentUser().sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                            @Override
-                                                            public void onComplete(@NonNull Task<Void> task) {
-
-                                                                if(task.isSuccessful()){
-                                                                    AlertDialog.Builder builder = new AlertDialog.Builder(hospitalsigup.this);
-                                                                    builder.setMessage("You Have Registered! Make Sure To Verify Your Email");
-                                                                    builder.setCancelable(false);
-                                                                    builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                                                                        @Override
-                                                                        public void onClick(DialogInterface dialog, int which) {
-
-                                                                            dialog.dismiss();
-
-                                                                            Intent intent = new Intent(hospitalsigup.this,hospitalloginemail.class);
-                                                                            startActivity(intent);
-
-
-                                                                        }
-                                                                    });
-                                                                    AlertDialog Alert = builder.create();
-                                                                    Alert.show();
-                                                                }else{
-                                                                    mDialog.dismiss();
-                                                                    ReusableCodeForAll.ShowAlert(hospitalsigup.this,"Error",task.getException().getMessage());
-                                                                }
-                                                            }
-                                                        });
-
+                                                        Intent intent = new Intent(hospitalsigup.this, hospitalloginemail.class);
+                                                        startActivity(intent);
+                                                        finish();
                                                     }
                                                 });
-
+                                    } else {
+                                        mDialog.dismiss();
+                                        ReusableCodeForAll.ShowAlert(hospitalsigup.this, "Registration Failed", task.getException().getMessage());
                                     }
-                                });
-                            }
-                        }
-                    });
+                                }
+                            });
                 }
-
             }
         });
-
     }
 
     String emailpattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
-    public boolean isValid(){
+
+    public boolean isValid() {
         Email.setErrorEnabled(false);
-        Email.setError("");
         Fname.setErrorEnabled(false);
-        Fname.setError("");
         Pass.setErrorEnabled(false);
-        Pass.setError("");
         mobileno.setErrorEnabled(false);
-        mobileno.setError("");
         cpass.setErrorEnabled(false);
-        cpass.setError("");
 
-        boolean isValid=false,isValidname=false,isValidemail=false,isValidpassword=false,isValidconfpassword=false,isValidmobilenum=false;
-        if(TextUtils.isEmpty(fname)){
-            Fname.setErrorEnabled(true);
-            Fname.setError("Enter First Name");
-        }else{
-            isValidname = true;
-        }
+        boolean isValid = true;
 
-        if(TextUtils.isEmpty(emailid)){
-            Email.setErrorEnabled(true);
-            Email.setError("Email Is Required");
-        }else{
-            if(emailid.matches(emailpattern)){
-                isValidemail = true;
-            }else{
-                Email.setErrorEnabled(true);
-                Email.setError("Enter a Valid Email Id");
-            }
+        if (TextUtils.isEmpty(fname)) {
+            Fname.setError("Enter Hospital Name");
+            isValid = false;
         }
-        if(TextUtils.isEmpty(password)){
-            Pass.setErrorEnabled(true);
-            Pass.setError("Enter Password");
-        }else{
-            if(password.length()<8){
-                Pass.setErrorEnabled(true);
-                Pass.setError("Password is Weak");
-            }else{
-                isValidpassword = true;
-            }
+        if (TextUtils.isEmpty(emailid) || !emailid.matches(emailpattern)) {
+            Email.setError("Enter valid Email");
+            isValid = false;
         }
-        if(TextUtils.isEmpty(confpassword)){
-            cpass.setErrorEnabled(true);
-            cpass.setError("Enter Password Again");
-        }else{
-            if(!password.equals(confpassword)){
-                cpass.setErrorEnabled(true);
-                cpass.setError("Password Dosen't Match");
-            }else{
-                isValidconfpassword = true;
-            }
+        if (TextUtils.isEmpty(password) || password.length() < 8) {
+            Pass.setError("Password must be at least 8 characters");
+            isValid = false;
         }
-        if(TextUtils.isEmpty(mobile)){
-            mobileno.setErrorEnabled(true);
-            mobileno.setError("Mobile Number Is Required");
-        }else{
-            if(mobile.length()<10){
-                mobileno.setErrorEnabled(true);
-                mobileno.setError("Invalid Mobile Number");
-            }else{
-                isValidmobilenum = true;
-            }
+        if (TextUtils.isEmpty(confpassword) || !confpassword.equals(password)) {
+            cpass.setError("Passwords do not match");
+            isValid = false;
+        }
+        if (TextUtils.isEmpty(mobile) || mobile.length() < 10) {
+            mobileno.setError("Enter valid mobile number");
+            isValid = false;
         }
 
-
-        isValid = (isValidconfpassword && isValidpassword  && isValidemail && isValidmobilenum && isValidname) ? true : false;
         return isValid;
-
-
     }
 }

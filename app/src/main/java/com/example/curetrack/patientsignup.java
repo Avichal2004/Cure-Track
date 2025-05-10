@@ -3,17 +3,13 @@ package com.example.curetrack;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -23,135 +19,96 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-
-import java.util.ArrayList;
 import java.util.HashMap;
-
-
 
 public class patientsignup extends AppCompatActivity {
 
-    TextInputLayout Fname,Email,Pass,cpass,mobileno;
-
-    Button signup, Emaill, Phone;
+    TextInputLayout Fname, Email, Pass, cpass, mobileno;
+    Button signup;
 
     FirebaseAuth FAuth;
     DatabaseReference databaseReference;
     FirebaseDatabase firebaseDatabase;
-    String fname,emailid,password,confpassword,mobile;
-    String role="Patient";
+
+    String fname, emailid, password, confpassword, mobile;
+    String role = "Patient";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_patientsignup);
 
-        Fname = (TextInputLayout)findViewById(R.id.fullname);
-        Email = (TextInputLayout)findViewById(R.id.email1);
-        Pass = (TextInputLayout)findViewById(R.id.Pwd1);
-        cpass = (TextInputLayout)findViewById(R.id.confirmpwd1);
-        mobileno = (TextInputLayout)findViewById(R.id.Phoneno1);
+        Fname = findViewById(R.id.fullname);
+        Email = findViewById(R.id.email1);
+        Pass = findViewById(R.id.Pwd1);
+        cpass = findViewById(R.id.confirmpwd1);
+        mobileno = findViewById(R.id.Phoneno1);
+        signup = findViewById(R.id.submitbtn1);
 
-        signup = (Button)findViewById(R.id.submitbtn1);
-
-
-
-
-
-        databaseReference = firebaseDatabase.getInstance().getReference("Patient");
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        databaseReference = firebaseDatabase.getReference("Patient");
         FAuth = FirebaseAuth.getInstance();
 
         signup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 fname = Fname.getEditText().getText().toString().trim();
                 emailid = Email.getEditText().getText().toString().trim();
-                mobile = mobileno.getEditText().getText().toString().trim();
                 password = Pass.getEditText().getText().toString().trim();
                 confpassword = cpass.getEditText().getText().toString().trim();
+                mobile = mobileno.getEditText().getText().toString().trim();
 
-                if (isValid()){
+                if (isValid()) {
                     final ProgressDialog mDialog = new ProgressDialog(patientsignup.this);
                     mDialog.setCancelable(false);
                     mDialog.setCanceledOnTouchOutside(false);
-                    mDialog.setMessage("Registration in progress please wait......");
+                    mDialog.setMessage("Registration in progress, please wait...");
                     mDialog.show();
 
-                    FAuth.createUserWithEmailAndPassword(emailid,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
+                    FAuth.createUserWithEmailAndPassword(emailid, password)
+                            .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                                @Override
+                                public void onComplete(@NonNull Task<AuthResult> task) {
+                                    mDialog.dismiss();
+                                    if (task.isSuccessful()) {
+                                        String userId = FAuth.getCurrentUser().getUid();
 
-                            if (task.isSuccessful()){
-                                String useridd = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                                databaseReference = FirebaseDatabase.getInstance().getReference("User").child(useridd);
-                                final HashMap<String , String> hashMap = new HashMap<>();
-                                hashMap.put("Role",role);
-                                databaseReference.setValue(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<Void> task) {
+                                        DatabaseReference userRef = firebaseDatabase.getReference("User").child(userId);
+                                        HashMap<String, String> userMap = new HashMap<>();
+                                        userMap.put("Role", role);
 
-                                        HashMap<String , String> hashMap1 = new HashMap<>();
-                                        hashMap1.put("Mobile No",mobile);
-                                        hashMap1.put("First Name",fname);
-                                        hashMap1.put("EmailId",emailid);
-                                        hashMap1.put("Password",password);
-                                        hashMap1.put("Confirm Password",confpassword);
+                                        userRef.setValue(userMap);
 
+                                        HashMap<String, String> patientMap = new HashMap<>();
+                                        patientMap.put("Mobile No", mobile);
+                                        patientMap.put("First Name", fname);
+                                        patientMap.put("EmailId", emailid);
+                                        patientMap.put("Password", password);
+                                        patientMap.put("Confirm Password", confpassword);
 
-                                        firebaseDatabase.getInstance().getReference("Patient")
-                                                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                                                .setValue(hashMap1).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        databaseReference.child(userId).setValue(patientMap)
+                                                .addOnCompleteListener(new OnCompleteListener<Void>() {
                                                     @Override
                                                     public void onComplete(@NonNull Task<Void> task) {
-                                                        mDialog.dismiss();
-
-                                                        FAuth.getCurrentUser().sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                            @Override
-                                                            public void onComplete(@NonNull Task<Void> task) {
-
-                                                                if(task.isSuccessful()){
-                                                                    AlertDialog.Builder builder = new AlertDialog.Builder(patientsignup.this);
-                                                                    builder.setMessage("You Have Registered! Make Sure To Verify Your Email");
-                                                                    builder.setCancelable(false);
-                                                                    builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                                                                        @Override
-                                                                        public void onClick(DialogInterface dialog, int which) {
-
-                                                                            dialog.dismiss();
-
-                                                                            Intent intent = new Intent(patientsignup.this, patientemaillogin.class);
-                                                                            startActivity(intent);
-
-
-                                                                        }
-                                                                    });
-                                                                    AlertDialog Alert = builder.create();
-                                                                    Alert.show();
-                                                                }else{
-                                                                    mDialog.dismiss();
-                                                                    ReusableCodeForAll.ShowAlert(patientsignup.this,"Error",task.getException().getMessage());
-                                                                }
-                                                            }
-                                                        });
-
+                                                        Toast.makeText(patientsignup.this, "Registration Successful!", Toast.LENGTH_SHORT).show();
+                                                        Intent intent = new Intent(patientsignup.this, patientemaillogin.class);
+                                                        startActivity(intent);
+                                                        finish();
                                                     }
                                                 });
-
+                                    } else {
+                                        Toast.makeText(patientsignup.this, "Registration Failed: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
                                     }
-                                });
-                            }
-                        }
-                    });
+                                }
+                            });
                 }
-
             }
         });
-
     }
 
     String emailpattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
-    public boolean isValid(){
+
+    public boolean isValid() {
         Email.setErrorEnabled(false);
         Email.setError("");
         Fname.setErrorEnabled(false);
@@ -163,63 +120,55 @@ public class patientsignup extends AppCompatActivity {
         cpass.setErrorEnabled(false);
         cpass.setError("");
 
-        boolean isValid=false,isValidname=false,isValidemail=false,isValidpassword=false,isValidconfpassword=false,isValidmobilenum=false;
-        if(TextUtils.isEmpty(fname)){
+        boolean isValidname = false, isValidemail = false, isValidpassword = false, isValidconfpassword = false, isValidmobilenum = false;
+
+        if (TextUtils.isEmpty(fname)) {
             Fname.setErrorEnabled(true);
             Fname.setError("Enter First Name");
-        }else{
+        } else {
             isValidname = true;
         }
 
-        if(TextUtils.isEmpty(emailid)){
+        if (TextUtils.isEmpty(emailid)) {
             Email.setErrorEnabled(true);
-            Email.setError("Email Is Required");
-        }else{
-            if(emailid.matches(emailpattern)){
-                isValidemail = true;
-            }else{
-                Email.setErrorEnabled(true);
-                Email.setError("Enter a Valid Email Id");
-            }
+            Email.setError("Email is Required");
+        } else if (!emailid.matches(emailpattern)) {
+            Email.setErrorEnabled(true);
+            Email.setError("Enter a Valid Email Id");
+        } else {
+            isValidemail = true;
         }
-        if(TextUtils.isEmpty(password)){
+
+        if (TextUtils.isEmpty(password)) {
             Pass.setErrorEnabled(true);
             Pass.setError("Enter Password");
-        }else{
-            if(password.length()<8){
-                Pass.setErrorEnabled(true);
-                Pass.setError("Password is Weak");
-            }else{
-                isValidpassword = true;
-            }
+        } else if (password.length() < 8) {
+            Pass.setErrorEnabled(true);
+            Pass.setError("Password is too short");
+        } else {
+            isValidpassword = true;
         }
-        if(TextUtils.isEmpty(confpassword)){
+
+        if (TextUtils.isEmpty(confpassword)) {
             cpass.setErrorEnabled(true);
             cpass.setError("Enter Password Again");
-        }else{
-            if(!password.equals(confpassword)){
-                cpass.setErrorEnabled(true);
-                cpass.setError("Password Dosen't Match");
-            }else{
-                isValidconfpassword = true;
-            }
+        } else if (!password.equals(confpassword)) {
+            cpass.setErrorEnabled(true);
+            cpass.setError("Passwords do not match");
+        } else {
+            isValidconfpassword = true;
         }
-        if(TextUtils.isEmpty(mobile)){
+
+        if (TextUtils.isEmpty(mobile)) {
             mobileno.setErrorEnabled(true);
-            mobileno.setError("Mobile Number Is Required");
-        }else{
-            if(mobile.length()<10){
-                mobileno.setErrorEnabled(true);
-                mobileno.setError("Invalid Mobile Number");
-            }else{
-                isValidmobilenum = true;
-            }
+            mobileno.setError("Mobile Number is Required");
+        } else if (mobile.length() != 10) {
+            mobileno.setErrorEnabled(true);
+            mobileno.setError("Invalid Mobile Number");
+        } else {
+            isValidmobilenum = true;
         }
 
-
-        isValid = (isValidconfpassword && isValidpassword  && isValidemail && isValidmobilenum && isValidname) ? true : false;
-        return isValid;
-
-
+        return isValidname && isValidemail && isValidpassword && isValidconfpassword && isValidmobilenum;
     }
 }
