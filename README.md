@@ -1,103 +1,141 @@
-# CureTrack - Integrated Hospital Capacity Management System
+# 🏥 **CureTrack** – *Integrated Hospital Capacity Management System*
 
-CureTrack is an Android application developed in Java using Android Studio. It allows users to search for hospitals, check availability, upload images using Cloudinary, and interact via a chat interface.
-It also includes user profiles, location-based search, and navigation between core features using a bottom navigation bar.
+**CureTrack** is an Android application built in **Java** using **Android Studio**, designed to help users locate hospitals, check bed availability, upload images via **Cloudinary**, and interact using a real-time **chat interface**. It features user profiles, location-aware search, and seamless navigation through a bottom navigation bar.
 
-## Features
+---
 
-### 🔍 Hospital Search
-- View nearby hospitals with bed availability.
-- Integrated search functionality.
-- Clickable hospital images for more details.
+## ✨ **Key Features**
 
-### 📍 Location Awareness
-- Displays the user's city/location (e.g., "Bhopal").
-- Uses image icons for location indication.
+### 🔍 **Hospital Search**
 
-### ☁️ Image Upload with Cloudinary
-- Select images from gallery.
-- Upload images to Cloudinary.
-- View uploaded image URL in log for access and verification.
+* View nearby hospitals with real-time **bed availability**.
+* Integrated **search bar** to filter hospitals by name.
+* Tapable hospital images open detailed views.
 
-### 👤 User Profile
-- Users can view and edit their profiles.
-- Data is stored and retrieved from Firebase Realtime Database.
+### 📍 **Location Awareness**
 
-### 🧭 Bottom Navigation
-- Three main tabs: Home, Record (Search), and Profile (Notifications).
-- Navigation implemented using `BottomNavigationView`.
+* Auto-displays user’s **current city** (e.g., *Bhopal*).
+* 📌 Location icon displayed for better UX.
 
-### 💬 Chat Feature
-- Chat with other users.
-- Create and manage chat groups.
-- Firebase Realtime Database and Firebase Storage used for chat messages and media attachments.
+### ☁️ **Image Upload with Cloudinary**
 
-## Screens & Fragments
+* 📷 Select images from gallery.
+* Upload directly to **Cloudinary**.
+* 📄 Uploaded image URL is logged for reference.
 
-- **HomeFragment**: Displays hospitals and image buttons.
-- **RecordFragment**: Search bar for hospitals.
-- **NotificationFragment**: Placeholder for profile or notifications.
-- **PatienthomeFragment**: Displays list and image buttons for hospitals, integrated with fragment lifecycle methods.
+### 👤 **User Profile**
 
-## Firebase Integration
+* View and update profile information.
+* Profile data stored in **Firebase Realtime Database**.
 
-- Firebase Authentication for sign-up/login.
-- Firebase Realtime Database for storing hospital, chat, and user data.
-- Firebase Storage for attachments (images, documents, audio, etc.).
+### 🧭 **Bottom Navigation Bar**
 
-## Cloudinary Integration
+* 🔙 Home | 📝 Record/Search | 🔔 Profile/Notifications
+* Implemented using `BottomNavigationView`.
 
-- Image uploads are handled via Cloudinary's Java SDK.
-- Configuration requires cloud name, API key, and API secret.
-- Uploaded image URL is accessible via the log.
+### 💬 **Real-Time Chat**
 
-### Screnshots 
-<p align="center">
-<img src="home.png" alt="Home Screen" width="250"/>
-<img src="aiims.png" alt="Search Screen" width="250"/>
-<img src="profile.png" alt="Profile Screen" width="250"/>
-  
- 
-<img src="hospital1.png" alt="Hospital Screen" width="250"/>
-<img src="hospital2.png" alt="Hospital Screen" width="250"/>
-<img src="appointment.png" alt="Appointment Screen" width="250"/>
-</p>
+* Chat with other users or groups.
+* Supports **media attachments** (images/docs/audio).
+* Powered by **Firebase Realtime Database** & **Firebase Storage**.
 
-### 🛠️ Installation Steps for Android Studio
-Follow these steps to set up and run this Android project locally:
+---
 
-**1. 📥 Install Android Studio**
-Download and install Android Studio from the official website:
-👉 https://developer.android.com/studio
+## 📱 **Core Screens & Fragments**
 
-**2. 🚀 Clone the Project**
-bash
-Copy
-Edit
-git clone https://github.com/Avichal2004/Cure-track.git
+* **HomeFragment** – Displays hospitals with clickable image buttons.
+* **RecordFragment** – Search interface for finding hospitals.
+* **NotificationFragment** – Placeholder for profile or future notifications.
+* **PatienthomeFragment** – Hospital listings & lifecycle-aware UI updates.
 
-**3. 📂 Open the Project in Android Studio**
-Launch Android Studio.
+---
 
-Click File > Open and select the cloned project folder.
+## 🔗 **Firebase Integration**
 
-**4. 📦 Install Dependencies**
-Android Studio will automatically sync and install Gradle dependencies.
+* 🔐 **Authentication** – Login/Sign-up.
+* 💾 **Realtime Database** – Stores hospital data, user profiles, and chat info.
+* 🗂️ **Storage** – Stores attachments (images, docs, audio).
 
-If prompted, click "Sync Now".
+---
 
-**5. 📱 Set Up an Emulator or Connect a Device**
-Go to Tools > Device Manager and create a virtual device (emulator),
-or connect a physical Android device with USB debugging enabled.
+## ☁️ **Cloudinary Integration**
 
-**6. ▶️ Run the App**
-Click the green "Run" button or use Shift + F10 to build and run the app on the selected device.
+* Utilizes Cloudinary's **Java SDK**.
+* Requires:
 
+  * `cloud_name`
+  * `api_key`
+  * `api_secret`
+* Image URL accessible through app logs.
 
+#### Example Cloudinary Config:
 
-### Example Cloudinary Config:
 ```java
 Map<String, String> config = new HashMap<>();
-config.put("cloud_name", "cloud_name");
-config.put("api_key", "api_key");
-config.put("api_secret", "api_secret");
+config.put("cloud_name", "your_cloud_name");
+config.put("api_key", "your_api_key");
+config.put("api_secret", "your_api_secret");
+```
+
+---
+
+## 🖼️ **App Screenshots**
+
+<p align="center">
+  <img src="home.png" alt="Home Screen" width="250"/>
+  <img src="aiims.png" alt="Search Screen" width="250"/>
+  <img src="profile.png" alt="Profile Screen" width="250"/>
+  <br/>
+  <img src="hospital1.png" alt="Hospital View" width="250"/>
+  <img src="hospital2.png" alt="Hospital View 2" width="250"/>
+  <img src="appointment.png" alt="Appointment Booking" width="250"/>
+</p>
+
+---
+
+## ⚙️ **Installation Guide (Android Studio)**
+
+### 1. 📥 Install Android Studio
+
+👉 [Download Android Studio](https://developer.android.com/studio)
+
+### 2. 🚀 Clone the Repository
+
+```bash
+git clone https://github.com/Avichal2004/Cure-track.git
+```
+
+### 3. 📂 Open in Android Studio
+
+* Open Android Studio
+* Go to `File > Open` and select the cloned project folder
+
+### 4. 📦 Sync Dependencies
+
+* Android Studio will auto-sync Gradle files
+* Click "Sync Now" if prompted
+
+### 5. 📱 Set Up Device
+
+* Create an emulator via `Tools > Device Manager`
+* Or connect a physical device with **USB debugging** enabled
+
+### 6. ▶️ Run the App
+
+* Click the green **Run** button or press **Shift + F10**
+
+---
+
+## 🔐 **Demo Credentials**
+
+### 🏥 Hospital Login
+
+* **Email**: `bhailala1001@gmail.com`
+* **Password**: `22222222`
+
+### 👤 Patient Login
+
+* **Email**: `avichalj48@gmail.com`
+* **Password**: `33333333`
+
+---
