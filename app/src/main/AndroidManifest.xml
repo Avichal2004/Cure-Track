@@ -2,8 +2,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.curetrack">
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
 
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.ACCESS_MEDIA_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
 
     <application
         android:allowBackup="true"
@@ -48,8 +52,13 @@
         <activity
             android:name=".hospitalloginphone"
             android:exported="false" />
+        <activity android:name="com.example.curetrack.AppointmentActivity" />
+
         <activity
             android:name=".hospitalloginemail"
+            android:exported="false" />
+        <activity
+            android:name=".Hospitalhome1"
             android:exported="false" />
         <activity
             android:name=".chooseone"

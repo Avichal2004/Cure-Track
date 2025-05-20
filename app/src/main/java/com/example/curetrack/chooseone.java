@@ -12,11 +12,16 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 public class chooseone extends AppCompatActivity {
 
     Button aspatient,ashospital;
     String type;
     Intent intent;
+    private FirebaseAuth auth;
+    private FirebaseUser currentUser;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,13 +35,19 @@ public class chooseone extends AppCompatActivity {
         intent=getIntent();
         type=intent.getStringExtra("Home").toString().trim();
         ashospital=(Button)findViewById(R.id.hospital);
+        auth = FirebaseAuth.getInstance();
+        currentUser = auth.getCurrentUser();
         aspatient=(Button) findViewById(R.id.patient);
         ashospital.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(type.equals("Email")){
                     Intent loginemail=new Intent(chooseone.this,hospitalloginemail.class);
-                    startActivity(loginemail);
+                    if (currentUser == null) {
+                        startActivity(loginemail);
+                    }else {
+                        startActivity(new Intent(chooseone.this,Hospitalhome1.class));
+                    }
                     finish();
                 }
                 if(type.equals("Phone")){
@@ -55,7 +66,12 @@ public class chooseone extends AppCompatActivity {
             public void onClick(View v) {
                 if(type.equals("Email")){
                     Intent loginemailpatient=new Intent(chooseone.this,patientemaillogin.class);
-                    startActivity(loginemailpatient);
+
+                    if (currentUser == null) {
+                        startActivity(loginemailpatient);
+                    }else {
+                        startActivity(new Intent(chooseone.this,Patienthome.class));
+                    }
                     finish();
                 }
                 if(type.equals("Phone")){

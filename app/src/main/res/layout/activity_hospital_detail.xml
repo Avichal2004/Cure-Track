@@ -1,106 +1,237 @@
+<?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="#FFFFFF">
 
-    <LinearLayout android:orientation="vertical"
+    <LinearLayout
+        android:orientation="vertical"
+        android:padding="16dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="16dp">
+        android:layout_height="wrap_content">
 
-        <ImageView
-            android:id="@+id/hospitalImage"
+        <!-- Hospital Image -->
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:scaleType="centerCrop" />
+            android:layout_height="200dp">
 
+            <ImageView
+                android:id="@+id/imageHospital"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:src="@drawable/aiims" />
+
+            <ImageView
+                android:id="@+id/backButton"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_margin="16dp"
+                android:src="@drawable/baseline_arrow_back_24"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="Back"
+                android:layout_gravity="start|top" />
+        </FrameLayout>
+
+        <!-- Title and Contact -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:layout_marginTop="16dp"
+            android:weightSum="2">
 
-            <TextView android:id="@+id/hospitalName"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:text="Hospital Name"
-                android:layout_marginTop="8dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+            <!-- Hospital Name and Email -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:layout_height="wrap_content">
 
-            <Button
-                android:layout_width="wrap_content"
+                <TextView
+                    android:id="@+id/hospitalName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Aiims Bhopal"
+                    android:textStyle="bold"
+                    android:textSize="24sp" />
+
+                <TextView
+                    android:id="@+id/hospitalemail"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="xyz@gmail.com" />
+            </LinearLayout>
+
+            <!-- Phone Details -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:orientation="vertical"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="100dp"
-                android:text="Navigate to Hospital"/>
+                android:gravity="end">
 
+                <TextView
+                    android:id="@+id/phoneNumber"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Phone no."
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/textphoneno"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="7697824882"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/navigatetohospital"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Navigate to Hospital"
+                    android:drawableStart="@drawable/baseline_arrow_circle_up_24"
+                    android:textSize="14sp" />
+            </LinearLayout>
         </LinearLayout>
 
-        <TextView android:id="@+id/phoneNumber"
-            android:textSize="16sp"
-            android:text="Phone: 0000000000"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-        <TextView android:id="@+id/totalBeds"
-            android:text="Total Beds: 0"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-        <Spinner android:id="@+id/deptSpinner"
+        <!-- Available Beds -->
+        <TextView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="Available beds for :-" />
 
-        <TextView android:id="@+id/deptBeds"
-            android:text="Beds for Dept: 0"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+        <Spinner
+            android:id="@+id/spinnerBedDept"
+            android:layout_width="match_parent"
+            android:layout_height="40dp" />
 
-        <TextView android:id="@+id/deptWaitTime"
-            android:text="Wait Time: 0 min"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Available beds :-" />
 
-        <TextView android:id="@+id/avgWaitTime"
-            android:text="Average Wait Time: 0 min"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+        <EditText
+            android:id="@+id/editAvailableBeds"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:enabled="false"
+            android:text="150"
+            android:gravity="center"
+            android:background="@drawable/edit_text_background" />
 
+        <!-- Waiting Time -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="Waiting time for :-" />
+
+        <Spinner
+            android:id="@+id/spinnerBedDept1"
+            android:layout_width="match_parent"
+            android:layout_height="40dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Average Waiting time :-" />
+
+        <EditText
+            android:id="@+id/editAvgWaitTime"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:enabled="false"
+            android:text="10 min"
+            android:gravity="center"
+            android:background="@drawable/edit_text_background" />
+
+        <!-- Options Section -->
         <LinearLayout
             android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             android:gravity="center"
-            android:layout_marginTop="16dp">
+            android:layout_marginTop="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-<!--            <Button android:id="@+id/appointmentBtn"-->
-<!--                android:text="Appointment" />-->
-<!--            <Button android:id="@+id/medicineBtn"-->
-<!--                android:text="Medicines" />-->
-<!--            <Button android:id="@+id/aboutBtn"-->
-<!--                android:text="Hospital Info" />-->
-            <Button
+            <!-- Appointment -->
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/appointmentBtn"
-                android:text="Appointment"/>
-            <Button
+                android:orientation="vertical"
+                android:gravity="center"
+                android:layout_margin="8dp">
+
+                <ImageView
+                    android:id="@+id/appointmentbtn"
+                    android:layout_width="66dp"
+                    android:layout_height="40dp"
+                    android:src="@drawable/appointment" />
+
+                <TextView
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+                    android:text="Appointment or Scheduling"
+                    android:textSize="12sp"
+                    android:gravity="center" />
+            </LinearLayout>
+
+            <!-- Medicine -->
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/medicineBtn"
-                android:text="Medicines"/>
+                android:orientation="vertical"
+                android:gravity="center"
+                android:layout_margin="8dp">
 
-            <Button
+                <ImageView
+                    android:id="@+id/medicine"
+                    android:src="@drawable/medicine"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp" />
+
+                <TextView
+                    android:text="Medicines"
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+            <!-- Info -->
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/aboutBtn"
-                android:text="Hospital Info"/>
+                android:orientation="vertical"
+                android:gravity="center"
+                android:layout_margin="8dp">
 
+                <ImageView
+                    android:id="@+id/info"
+                    android:src="@drawable/info"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp" />
+
+                <TextView
+                    android:text="Hospital Info"
+                    android:layout_width="90dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textSize="12sp" />
+            </LinearLayout>
         </LinearLayout>
 
-        <Button android:id="@+id/chatBtn"
-            android:text="Chat with Hospital"
+        <!-- Chat Button -->
+        <Button
+            android:id="@+id/btnChat"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp" />
-
+            android:layout_marginTop="20dp"
+            android:text="Chat With Aiims"
+            android:backgroundTint="@color/green" />
     </LinearLayout>
 </ScrollView>

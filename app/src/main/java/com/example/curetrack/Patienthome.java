@@ -2,6 +2,7 @@ package com.example.curetrack;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
 
@@ -72,9 +73,17 @@ public class Patienthome extends AppCompatActivity {
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         hospitalList.clear();
                         for (DataSnapshot data : snapshot.getChildren()) {
-                            Hospital hospital = data.getValue(Hospital.class);
-                            if (hospital != null) {
-                                hospitalList.add(hospital);
+                            String uid = data.getKey();
+                            String name = data.child("hospitalName").getValue(String.class);
+                            String phone = data.child("phone").getValue(String.class);
+                            String imageUrl = data.child("imageUrl").getValue(String.class);
+                            Long bedsLong = data.child("departments").child("General").getValue(Long.class);
+                            String email=data.child("email").getValue(String.class);
+                            int availableBeds = bedsLong != null ? bedsLong.intValue() : 0;
+
+                            if (name != null && phone != null && imageUrl != null) {
+                                hospitalList.add(new Hospital(name, phone, imageUrl, availableBeds,uid,email));
+                                Log.d("FirebaseHospital", "Loaded: " + name + ", Beds: " + availableBeds);
                             }
                         }
                         adapter.notifyDataSetChanged();
@@ -85,6 +94,7 @@ public class Patienthome extends AppCompatActivity {
                         Toast.makeText(Patienthome.this, "Failed to load data", Toast.LENGTH_SHORT).show();
                     }
                 });
-
     }
+
+
 }

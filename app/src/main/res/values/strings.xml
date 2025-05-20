@@ -15,4 +15,17 @@
         <item> Apollo Hospital </item>
         <item> Bansal </item>
     </string-array>
+
+    <string-array name="general_departments">
+        <item>General</item>
+        <item>OPD</item>
+        <item>Emergency</item>
+    </string-array>
+
+    <string-array name="special_departments">
+        <item>Special</item>
+        <item>Cardiology</item>
+        <item>Neurology</item>
+    </string-array>
+
 </resources>

@@ -2,6 +2,7 @@ package com.example.curetrack;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,7 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -37,11 +39,15 @@ public class HospitalAdapter extends RecyclerView.Adapter<HospitalAdapter.ViewHo
 
             view.setOnClickListener(v -> {
                 Hospital selected = hospitals.get(getAdapterPosition());
+
                 Intent intent = new Intent(context, HospitalDetailsActivity.class);
-                intent.putExtra("hospitalName", selected.getName());
+                intent.putExtra("hospitalName", selected.getHospitalName());
                 intent.putExtra("phone", selected.getPhone());
                 intent.putExtra("imageUrl", selected.getImageUrl());
-                intent.putExtra("totalBeds", selected.getBeds());
+                intent.putExtra("availableBeds", selected.getAvailableBeds());
+                intent.putExtra("email", selected.getEmail());
+                intent.putExtra("uid", selected.getUid());
+                Log.d("uid1",selected.getUid());
                 context.startActivity(intent);
             });
 
@@ -57,8 +63,9 @@ public class HospitalAdapter extends RecyclerView.Adapter<HospitalAdapter.ViewHo
     @Override
     public void onBindViewHolder(HospitalAdapter.ViewHolder holder, int position) {
         Hospital h = hospitals.get(position);
-        holder.name.setText(h.getName() != null ? h.getName() : "No Name");
-        holder.beds.setText("Beds: " + h.getBeds());
+//        Log.d("HospitalAdapter", h.getName());
+        holder.name.setText(h.getHospitalName() != null ? h.getHospitalName() : "No Name");
+        holder.beds.setText("Beds: " + h.getAvailableBeds());
         holder.phone.setText("Ph no. " + (h.getPhone() != null ? h.getPhone() : "N/A"));
 
         // Uncomment and use if image loading is needed
@@ -66,6 +73,7 @@ public class HospitalAdapter extends RecyclerView.Adapter<HospitalAdapter.ViewHo
         //     .load(h.getImageUrl())
         //     .placeholder(R.drawable.placeholder_image)
         //     .into(holder.image);
+        Picasso.get().load(h.getImageUrl()).into(holder.image);
     }
 
 
